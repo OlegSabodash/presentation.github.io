@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+
+	<title>reveal.js – The HTML Presentation Framework</title>
+
+	<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+	<meta name="author" content="Hakim El Hattab">
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/zenburn.css">
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+
+	<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+</head>
+
+<body>
+
+	<div class="reveal">
+
+		<!-- Any section element inside of this container is displayed as a slide -->
+		<div class="slides">
+
+			<section >
+				<section >
+					<h1>Promise</h1>
+				</section>
+				<section data-background="https://media.giphy.com/media/l1J9wZJLPywQuKovK/giphy.gif"></section>
+				<section></section>
+				<section>
+					<img src="img/schemePromise.png" alt="scheme">
+				</section>
+			</section>
+
+
+			<section>
+				<section>
+					<h2>syntax</h2>
+				</section>
+				<section>
+					<pre style="width: 1050px"><code class="hljs" data-trim contenteditable>
+									let promise = new Promise(function(resolve, reject) {
+										// the function is executed automatically when the promise is constructed
+									  
+										// result = resolve("success") or reject("error");
+										 })	
+								</code></pre>
+
+				</section>
+			</section>
+
+			<section>
+				<section>
+					<h2>Then</h2>
+				</section>
+				<section>
+					<pre style="width: 880px;"><code class="hljs" data-trim contenteditable>
+									promise.then(onFulfilled, onRejected)
+		
+									onFulfilled – is a function that runs when the Promise is resolved, 
+										and receives the result.
+									onRejected – is a function that runs when the Promise is rejected, 
+										and receives the error.
+								</code></pre>
+
+				</section>
+				
+				<section>
+						<pre><code class="hljs" data-trim contenteditable>
+								// onFulfilled 
+								promise.then(onFulfilled)
+								// onRejected 
+								promise.then(null, onRejected)
+									  </code></pre>
+	
+					</section>
+			</section>
+
+			<section>
+				<section>
+					<h2>Catch</h2>
+				</section>
+				<section>
+					<pre><code class="hljs" data-trim contenteditable>
+									promise.catch(onRejected);
+		
+									promise.catch(function(reason) {
+										   // reason
+									});
+		
+									onRejected - is a function that runs when the Promise is rejected, 
+										and receives the error.
+							  </code></pre>
+				</section>
+				<section>
+					<p>Example</p>
+					<pre><code class="hljs" data-trim contenteditable>
+									let p = new Promise((resolve, reject) => {
+										reject(new Error("Whoops!"))
+									  })
+									  
+									p.catch(alert); // Error: Whoops!
+							</code></pre>
+				</section>
+				
+			</section>
+
+
+
+			<section>
+				<section>
+					<h2>Promise chains</h2>
+				</section>
+				<section data-background="https://media.giphy.com/media/l378bADEYcxLQu4dq/giphy.gif"></section>
+				<section>
+						<pre ><code class="hljs" data-trim contenteditable style="max-height: none">
+										let epam = true;
+
+										let student = {
+											name: "Oleg",
+											old: "20",
+											stage: "I'm in the second stage"
+										}
+
+										let message = "try next time";
+	
+										function takeMeToEpam(...stages) {
+											return new Promise((resolve, reject) => {
+											if (epam) {
+												resolve(stages[0]);
+												}
+											else {
+												reject(new Error(stages[1]));
+												}
+											})
+										}
+								</code></pre>
+					</section>
+					<section>
+							<pre style="width:950px"><code class="hljs" data-trim contenteditable style="max-height: none">
+							takeMeToEpam(student.name, message)
+								.then((fulfilled) => {
+									console.log("My name is " + fulfilled);
+									return student.stage;
+								})
+								.then((fulfilled) => {
+									console.log(fulfilled);
+									return takeMeToEpam("I'm in the third stage", message);
+								})
+								.then((fulfilled) => {
+									console.log(fulfilled)
+									return takeMeToEpam("I'm in the laba", message);
+								})
+								.then((fulfilled) => {
+									console.log(fulfilled);
+									epam = false;
+									return takeMeToEpam("I'm working in Epam", message);
+								})
+								.catch((rejected) => {
+									console.log(rejected.message);
+									
+								})
+							</code></pre>
+					</section>
+			</section>
+
+
+			<section>
+				<section>
+					<h2>
+						Properties
+					</h2>
+				</section>
+				<section data-markdown>
+						<script type="text/template">
+							- PromiseState – state. <!-- .element: class="fragment" data-fragment-index="1" -->
+							- PromiseResult – result. <!-- .element: class="fragment" data-fragment-index="2" -->
+							- PromiseFulfillReactions – function list(Successfully) <!-- .element: class="fragment" data-fragment-index="3" -->
+							- PromiseRejectReactions – function list(Error). <!-- .element: class="fragment" data-fragment-index="4" -->
+						</script>
+						
+				</section>
+				<section data-markdown>
+						<script type="text/template">
+							- PromiseState – pending <!-- .element: class="fragment" data-fragment-index="1" -->
+							- PromiseResult – undefined <!-- .element: class="fragment" data-fragment-index="2" -->
+							- PromiseFulfillReactions – [] <!-- .element: class="fragment" data-fragment-index="3" -->
+							- PromiseRejectReactions – [] <!-- .element: class="fragment" data-fragment-index="4" -->
+						</script>			
+				</section>
+				<section>
+					<p>Example</p>
+					<pre><code class="hljs" data-trim contenteditable>
+								let promise = new Promise((resolve, reject) => resolve("result"));
+									// PromiseState = "resolved"
+									// PromiseResult = result
+
+									// Added handler to completed promis
+									promise.then(function func(result){
+										console.log(result);    
+									})  
+								</code></pre>
+				</section>
+				
+					<section data-markdown>
+								<script type="text/template">
+									- PromiseState – resolve <!-- .element: class="fragment" data-fragment-index="1" -->
+									- PromiseResult – result <!-- .element: class="fragment" data-fragment-index="2" -->
+									- PromiseFulfillReactions – [func] <!-- .element: class="fragment" data-fragment-index="3" -->
+									- PromiseRejectReactions – [thrower] <!-- .element: class="fragment" data-fragment-index="4" -->
+								</script>			
+					</section>
+			</section>
+
+			<section>
+				<section>
+					<h2>
+						Methods
+					</h2>
+				</section>
+				<section>
+					<h4>
+						Promise.all()
+					</h4>
+					<pre><code class="hljs" data-trim contenteditable>
+							function f(number){
+								return new Promise((resolve,reject)=>{
+									resolve(number);
+								})
+							}
+							Promise.all([
+								f(1),
+								f(2),
+								f(3)
+							]).then((fulfilled)=>{
+								console.log(fulfilled)})
+								
+							</code></pre>
+				</section>
+				
+				<section>
+					<h4>
+						Promise.race()
+					</h4>
+					<pre><code class="hljs" data-trim contenteditable>
+							function f(number){
+								return new Promise((resolve,reject)=>{
+									resolve(number);
+								})
+							}
+							Promise.race([
+								f(1),
+								f(2),
+								f(3)
+							]).then((fulfilled)=>{
+								console.log(fulfilled)})
+								
+							</code></pre>
+				</section>
+				
+				<section>
+					<h4>
+						Promise.resolve()
+					</h4>
+					<pre><code class="hljs" data-trim contenteditable>
+							Promise.resolve("Success").then(alert);
+						 	</code></pre>
+				</section>
+				<section>
+					<h4>
+						Promise.reject()
+					</h4>
+					<pre><code class="hljs" data-trim contenteditable>
+							Promise.reject(new Error("...")).catch(alert) // Error: ...
+							</code></pre>
+				</section>
+
+			</section>
+			<section>
+				My email: o.sabodash@mail.ru
+			</section>
+			<section data-background="https://media.giphy.com/media/xT9IgHNBhXYZyBpol2/giphy.gif">
+				<h1>THE END</h1>
+			</section>
+			
+		</div>
+
+	</div>
+
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.js"></script>
+
+	<script>
+
+		// More info https://github.com/hakimel/reveal.js#configuration
+		Reveal.initialize({
+			controls: true,
+			progress: true,
+			history: true,
+			center: true,
+
+			transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+			// More info https://github.com/hakimel/reveal.js#dependencies
+			dependencies: [
+				{ src: 'lib/js/classList.js', condition: function () { return !document.body.classList; } },
+				{ src: 'plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+				{ src: 'plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
+				{ src: 'plugin/highlight/highlight.js', async: true, callback: function () { hljs.initHighlightingOnLoad(); } },
+				{ src: 'plugin/search/search.js', async: true },
+				{ src: 'plugin/zoom-js/zoom.js', async: true },
+				{ src: 'plugin/notes/notes.js', async: true }
+			]
+		});
+
+	</script>
+
+</body>
+
+</html>
